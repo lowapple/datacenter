@@ -1,1 +1,0 @@
-service_key = "gRUX5P33koKONMFfxvMtowyPSjacHjsgcJtR85r0iDBAQ20pLll2ns+oOzeHhKKfZ9tvSZR2RkUuzQLx1KA1YQ=="
