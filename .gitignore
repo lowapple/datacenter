@@ -227,3 +227,4 @@ pip-selfcheck.json
 # End of https://www.gitignore.io/api/python,pycharm,virtualenv,visualstudiocode
 
 config.py
+./config.py
