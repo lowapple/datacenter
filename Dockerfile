@@ -14,11 +14,9 @@ RUN apt-get install -y git
 RUN apt-get install -y python3-pip
 
 # pip 업그레이드
-#CMD python3 -m pip install pip --upgrade
-# RUN python3 -m pip install pip --upgrade
 RUN pip3 install --upgrade pip
 
-# 여러분의 현재 디렉토리의 모든 파일들을 도커 컨테이너의 /python-docker 디렉토리로 복사 (원하는 디렉토리로 설정해도 됨)
+# 디렉토리 생성 & 파일 이동
 ADD . /tourcenter
 
 # 5000번 포트 개방
