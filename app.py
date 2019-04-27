@@ -1,12 +1,20 @@
 # -- coding: utf-8 --
 
 from flask import Flask, request
+from flask_restful import Resource, Api
 import json
 from bson.json_util import dumps
 import database
 import utils
+import aiohttp
+import configparser
+
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 app = Flask(__name__)
+api = Api(app)
+
 
 @app.route('/search_area', methods=['POST'])
 def search_area():
@@ -20,16 +28,13 @@ def search_area():
 async def init_app():
     await init_korea_area()
 
+
 async def init_korea_area():
-
     print('-------------- Init Korea Area --------------')
-
-    import aiohttp
-    import config
 
     base_url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode'
     params = {
-        'ServiceKey': config.service_key,
+        'ServiceKey': config['DEFAULT']['SERVICE_KEY'],
         'numOfRows': 20,
         'pageNo': 1,
         'MobileOS': 'ETC',
@@ -41,8 +46,9 @@ async def init_korea_area():
         async with session.get(url=base_url, params=params) as res:
             datas = await res.text()
             datas = json.loads(datas)
+            print(datas)
             datas = datas['response']['body']['items']['item']
-            
+
             db = database.getDatabase()
             korea_area = db.korea_area
             # pprint.pprint(korea_area.find_one())
@@ -50,15 +56,15 @@ async def init_korea_area():
             # print(korea_area.finds())
             for data in datas:
                 print(data)
-                if korea_area.find_one({'rnum' : data['rnum']}) == None:
+                if korea_area.find_one({'rnum': data['rnum']}) == None:
                     print('insert ' + str(data))
-                    korea_area.insert(data)
-
+                    # korea_area.insert(data)
 
 
 if __name__ == '__main__':
     import asyncio
+
     loop = asyncio.get_event_loop()
     loop.run_until_complete(init_app())
-    
+
     app.run(debug=True, host='0.0.0.0')
